@@ -1,0 +1,63 @@
+:root {
+	--ck-image-style-spacing: 1.5em;
+	--ck-image-upload-progress-line-width: 30px;
+}
+
+.ck-content_image {
+	clear: both;
+	text-align: center;
+	margin: 1em 0;
+}
+
+.ck-content__image img {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+}
+
+.ck-content__image {
+	position: relative;
+	overflow: hidden;
+}
+
+.ck-content__image .ck-progress-bar {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.ck-content__image figcaption {
+	background-color: transparent !important;
+	color: #9aa5ab;
+	font-size: 14px;
+	padding: 16px;
+	display: block !important;
+	text-align: center;
+}
+
+.ck-content__image_side,
+.ck-content__image_align-left,
+.ck-content__image_align-center,
+.ck-content__image_align-right {
+	max-width: 50%;
+}
+
+.ck-content__image_side {
+	float: right;
+	margin-left: var(--ck-image-style-spacing);
+}
+
+.ck-content__image_align-left {
+	float: left;
+	margin-right: var(--ck-image-style-spacing);
+}
+
+.ck-content__image_align-center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ck-content__image_align-right {
+	float: right;
+	margin-left: var(--ck-image-style-spacing);
+}
