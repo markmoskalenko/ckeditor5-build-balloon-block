@@ -457,15 +457,6 @@
 	transform: translateX(var(--ck-switch-button-toggle-transform)) !important;
 }
 
-/* IMAGE */
-.ck-content .image > figcaption {
-	background-color: transparent !important;
-	color: #9aa5ab;
-	font-size: 14px;
-	padding: 16px;
-	display: block !important;
-}
-
 /* MEDIA / LINK */
 .ck-media-embed-dropdown .ck-dropdown__container {
 	padding-bottom: 40px !important;

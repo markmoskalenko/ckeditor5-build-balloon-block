@@ -32,7 +32,13 @@ const icons = [
 	new webpack.NormalModuleReplacementPlugin( /tooltipview\.js/, __dirname + '/src/plugins/tooltip/tooltip.js' ),
 	new webpack.NormalModuleReplacementPlugin( /tableui\.js/, __dirname + '/src/plugins/table/tableui.js' ),
 	new webpack.NormalModuleReplacementPlugin( /alignmentui\.js/, __dirname + '/src/plugins/alignment/alignmentui.js' ),
-	new webpack.NormalModuleReplacementPlugin( /imagecaptionediting\.js/, __dirname + '/src/plugins/image/imagecaptionediting.js' ),
+	new webpack.NormalModuleReplacementPlugin(
+		/imagecaptionediting\.js/,
+		__dirname + '/src/plugins/image/imagecaption/imagecaptionediting.js'
+	),
+	new webpack.NormalModuleReplacementPlugin( /imageediting\.js/, __dirname + '/src/plugins/image/imageediting.js' ),
+	new webpack.NormalModuleReplacementPlugin( /imagestyleediting\.js/, __dirname + '/src/plugins/image/imagestyle/imagestyleediting.js' ),
+	new webpack.NormalModuleReplacementPlugin( /imagestyleui\.js/, __dirname + '/src/plugins/image/imagestyle/imagestyleui.js' ),
 	new webpack.NormalModuleReplacementPlugin( /placeholder\.js/, __dirname + '/src/plugins/fix/placeholder.js' ),
 	new webpack.NormalModuleReplacementPlugin( /mediaembedui\.js/, __dirname + '/src/plugins/media/mediaembedui.js' ),
 	new webpack.NormalModuleReplacementPlugin( /media\.svg/, __dirname + '/src/assets/icons/video.svg' ),
