@@ -26,7 +26,7 @@ const icons = [
 	new webpack.NormalModuleReplacementPlugin( /linkui\.js/, __dirname + '/src/plugins/link/linkui.js' ),
 	new webpack.NormalModuleReplacementPlugin( /headingui\.js/, __dirname + '/src/plugins/heading/headingui.js' ),
 	// new webpack.NormalModuleReplacementPlugin( /table-merge-cell\.svg/, __dirname + '/src/assets/icons/link.svg' ),
-	new webpack.NormalModuleReplacementPlugin( /pilcrow\.svg/, __dirname + '/src/assets/icons/plus-add.svg' ),
+	new webpack.NormalModuleReplacementPlugin( /blocktoolbar\.js/, __dirname + '/src/plugins/blocktoolbar/blocktoolbar.js' ),
 	new webpack.NormalModuleReplacementPlugin( /image\.svg/, __dirname + '/src/assets/icons/picture.svg' ),
 	new webpack.NormalModuleReplacementPlugin( /dropdown-arrow\.svg/, __dirname + '/src/assets/icons/dropdown-arrow.svg' ),
 	new webpack.NormalModuleReplacementPlugin( /tooltipview\.js/, __dirname + '/src/plugins/tooltip/tooltip.js' ),
