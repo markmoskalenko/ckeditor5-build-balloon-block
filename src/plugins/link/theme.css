@@ -1,0 +1,67 @@
+:root {
+	--ck-link-image-preview-width: 20%;
+	--ck-link-image-preview-padding-right: 16px;
+	--ck-link-preview-padding: 24px;
+}
+
+.link.ck-widget_with-selection-handler {
+	border: 2px solid #c4c7cc;
+}
+
+.link.ck-widget_with-selection-handler.ck-widget_selected {
+	border: 2px solid #3bc7ab;
+}
+
+.link .ck.ck-widget__selection-handler,
+.link .ck.ck-widget__selection-handler:hover,
+.link.ck-widget_with-selection-handler.ck-widget_selected .ck-icon__selected-indicator,
+.link.ck-widget_with-selection-handler.ck-widget_selected:hover .ck-icon__selected-indicator {
+	opacity: 0 !important;
+}
+
+.link.ck-widget,
+.ck-content__link_preview {
+	padding: var(--ck-link-preview-padding);
+	display: flex;
+	align-items: center;
+}
+
+.ck-content__link_preview.ck-link .ck-link__thumbnail {
+	width: var(--ck-link-image-preview-width);
+	padding-right: var(--ck-link-image-preview-padding-right);
+}
+
+.ck-content__link_preview.ck-link .ck-link__container {
+	max-width: calc(100% - var(--ck-link-image-preview-width));
+}
+
+.ck-content__link_preview.ck-link .ck-link__header {
+	font-weight: 600;
+	color: #333333;
+	font-size: 24px;
+	white-space: normal !important;
+}
+
+.ck-content__link_preview.ck-link .ck-link__url {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.ck-content__link_preview.ck-link .ck-link__url-link {
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.ck-content__link_preview.ck-link .ck-link__url:before {
+}
+
+.ck-content__link_preview.ck-link .ck-link__description {
+	font-size: 14px;
+	color: #9aa5ab;
+	white-space: normal !important;
+}
+
+.ck-content__link .ck-link__text {
+	font-size: 14px;
+	color: #333333;
+}

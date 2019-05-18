@@ -3,7 +3,7 @@
 	--ck-image-upload-progress-line-width: 30px;
 }
 
-.ck-content_image {
+.ck-content__image {
 	clear: both;
 	text-align: center;
 	margin: 1em 0;
