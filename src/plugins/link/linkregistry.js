@@ -12,14 +12,18 @@ export default class LinkRegistry {
 		return !!this._getInfo( url );
 	}
 
-	getLinkViewElement( writer, url, options ) {
+	getLinkViewElement( writer, url, options, information ) {
 		const info = this._getInfo( url );
 		if ( info ) {
-			return info.getViewElement( writer, options );
+			return info.getViewElement( writer, options, information );
 		}
 	}
 
 	_getInfo( url ) {
+		if ( !url ) {
+			return new LinkInformation( this.locale );
+		}
+
 		return new LinkInformation( this.locale, url, this.config );
 	}
 }
@@ -30,17 +34,27 @@ class LinkInformation {
 		this.config = config;
 	}
 
-	getViewElement( writer, options ) {
+	getViewElement( writer, options, information ) {
 		const attributes = {};
+		if ( options.renderForEditingView ) {
+			if ( this.url ) {
+				attributes.href = this.url;
+				const linkHtml = this._getPlaceholderHtml( information );
+				return writer.createUIElement( 'div', attributes, function( domDocument ) {
+					const domElement = this.toDomElement( domDocument );
 
-		if ( this.url ) {
-			// const shouldCutUrl = this.config && this.config.host &&
-			// 	this._shouldBeShort( this.url, this.config.host );
+					domElement.innerHTML = linkHtml;
 
-			// attributes[ 'routerLink' ] = JSON.stringify( [ shouldCutUrl ? this._shortUrl( this.url ) : this.url ] )
-			attributes.href = this.url;
-			const linkHtml = this._getPlaceholderHtml( options );
-			return writer.createUIElement( 'div', attributes, function( domDocument ) {
+					return domElement;
+				} );
+			}
+		} else {
+			if ( this.url ) {
+				attributes.href = this.url;
+			}
+
+			const linkHtml = this._getSimpleLinkHtml();
+			return writer.createUIElement( 'a', attributes, function( domDocument ) {
 				const domElement = this.toDomElement( domDocument );
 
 				domElement.innerHTML = linkHtml;
@@ -48,6 +62,15 @@ class LinkInformation {
 				return domElement;
 			} );
 		}
+	}
+
+	_getSimpleLinkHtml() {
+		const link = new Template( {
+			tag: 'span',
+			children: [ this.url ]
+		} ).render();
+
+		return link.outerHTML;
 	}
 
 	_getPlaceholderHtml( information ) {
@@ -107,34 +130,5 @@ class LinkInformation {
 		} ).render();
 
 		return placeholder.outerHTML;
-	}
-
-	_shortUrl( href ) {
-		/* eslint-disable */
-		const link = document.createElement( 'a' );
-		/* eslint-enable */
-		link.href = href;
-		return link.pathname;
-	}
-
-	_shouldBeShort( href, base ) {
-		let hostname;
-
-		if ( !href || href == 'null' ) {
-			return false;
-		}
-
-		// Убрать протокол
-		if ( href.indexOf( '//' ) > -1 ) {
-			hostname = href.split( '/' )[ 2 ];
-		}
-
-		// Убрать порт из ссылки
-		hostname = hostname.split( ':' )[ 0 ];
-
-		// Убрать параметры
-		hostname = hostname.split( '?' )[ 0 ];
-
-		return hostname === base;
 	}
 }

@@ -8,6 +8,8 @@ import { createLinkPreviewElement } from './utils';
 import { toWidget } from '@ckeditor/ckeditor5-widget/src/utils';
 import { ensureSafeUrl, createLinkElement } from '@ckeditor/ckeditor5-link/src/utils';
 import './theme.css';
+import { modelToViewUrlAttributeConverter } from './converters';
+import { parseUrl } from './parser';
 
 const HIGHLIGHT_CLASS = 'ck-link_selected';
 
@@ -33,7 +35,7 @@ export default class LinkEditing extends Plugin {
 			.elementToElement( {
 				model: 'preview',
 				view: ( modelElement, viewWriter ) => {
-					const url = modelElement.getAttribute( 'linkHref' );
+					const url = modelElement.getAttribute( 'url' );
 					const previewInfo = modelElement.getAttribute( 'info' );
 					return createLinkPreviewElement( viewWriter, registry, url, previewInfo );
 				}
@@ -55,6 +57,11 @@ export default class LinkEditing extends Plugin {
 				}
 			} );
 
+		editor.conversion.for( 'editingDowncast' ).add(
+			modelToViewUrlAttributeConverter( registry, {
+				renderForEditingView: true
+			} ) );
+
 		editor.conversion.for( 'upcast' )
 			.elementToAttribute( {
 				view: {
@@ -75,7 +82,7 @@ export default class LinkEditing extends Plugin {
 					const isPreview = viewElement.parent.childCount === 1 &&
 						viewElement._children[ 0 ].data === url;
 
-					const previewInfo = this._parseUrl( url );
+					const previewInfo = parseUrl( url );
 
 					if ( registry.hasLinkInfo( url ) && isPreview && previewInfo.title ) {
 						return viewWriter.createElement( 'preview', { url, info: previewInfo } );
@@ -135,15 +142,5 @@ export default class LinkEditing extends Plugin {
 				} );
 			}
 		} );
-	}
-
-	_parseUrl( href ) {
-		/* eslint-disable */
-		const request = new XMLHttpRequest();
-		/* eslint-enable */
-		const api = `https://ckeditor.iframe.ly/api/oembed?url=${ href }`;
-		request.open( 'GET', api, false );
-		request.send( 'null' );
-		return JSON.parse( request.response );
 	}
 }
