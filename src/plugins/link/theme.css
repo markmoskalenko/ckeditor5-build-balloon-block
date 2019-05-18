@@ -1,15 +1,15 @@
 :root {
-	--ck-link-image-preview-width: 20%;
+	--ck-link-image-preview-width: 70px;
 	--ck-link-image-preview-padding-right: 16px;
 	--ck-link-preview-padding: 24px;
 }
 
 .link.ck-widget_with-selection-handler {
-	border: 2px solid #c4c7cc;
+	border: 1px solid #c4c7cc;
 }
 
 .link.ck-widget_with-selection-handler.ck-widget_selected {
-	border: 2px solid #3bc7ab;
+	border: 1px solid #3bc7ab;
 }
 
 .link .ck.ck-widget__selection-handler,
@@ -32,7 +32,7 @@
 }
 
 .ck-content__link_preview.ck-link .ck-link__container {
-	max-width: calc(100% - var(--ck-link-image-preview-width));
+	max-width: 600px /* todo fix */
 }
 
 .ck-content__link_preview.ck-link .ck-link__header {
