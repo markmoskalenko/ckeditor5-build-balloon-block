@@ -243,7 +243,8 @@ function updatePlaceholder( writer, element, config ) {
 // @returns {module:engine/view/element~Element|null}
 function getChildPlaceholderHostSubstitute( parent ) {
 	const childCount = parent && parent.childCount;
-	if ( childCount === 1 ) {
+	// todo will be fixed by CKEditor5 team
+	if ( childCount === 1 && parent._children[ 0 ].name === 'p' ) {
 		const firstChild = parent.getChild( childCount - 1 );
 
 		if ( firstChild.is( 'element' ) && !firstChild.is( 'uiElement' ) ) {
