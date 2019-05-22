@@ -1,5 +1,5 @@
 export function createLinkPreviewElement( writer, registry, url, information ) {
-	const element = writer.createContainerElement( 'div', { class: 'link' } );
+	const element = writer.createContainerElement( 'p', { class: 'ck-link' } );
 	element.getFillerOffset = getFillerOffset;
 
 	const linkElement = registry.getLinkViewElement( writer, url, {}, information );

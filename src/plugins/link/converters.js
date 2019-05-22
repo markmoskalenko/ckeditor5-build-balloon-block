@@ -1,6 +1,6 @@
 import { parseUrl } from './parser';
 
-export function modelToViewUrlAttributeConverter( registry, options ) {
+export function modelToViewUrlAttributeConverter( registry, options, domain ) {
 	return dispatcher => {
 		dispatcher.on( 'attribute:url:preview', converter );
 	};
@@ -11,7 +11,7 @@ export function modelToViewUrlAttributeConverter( registry, options ) {
 		}
 
 		const url = data.attributeNewValue;
-		const information = parseUrl( url );
+		const information = parseUrl( domain, url );
 		const viewWriter = conversionApi.writer;
 		const figure = conversionApi.mapper.toViewElement( data.item );
 		viewWriter.remove( viewWriter.createRangeIn( figure ) );

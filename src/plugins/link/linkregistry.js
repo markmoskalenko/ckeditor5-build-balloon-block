@@ -1,5 +1,6 @@
 import Template from '@ckeditor/ckeditor5-ui/src/template';
 import { ensureSafeUrl } from '@ckeditor/ckeditor5-link/src/utils';
+import { getDomain } from './parser';
 
 export default class LinkRegistry {
 	constructor( locale, config, editor ) {
@@ -81,52 +82,48 @@ class LinkInformation {
 				// target: '_blank',
 				// href: this.url
 			},
-			children: [
-				{
-					tag: 'img',
+			children: [ {
+				tag: 'div',
+				attributes: {
+					class: 'ck-link__container'
+				},
+				children: [ {
+					tag: 'p',
 					attributes: {
-						class: 'ck-link__thumbnail',
-						src: information.thumbnail_url
-					}
+						class: 'ck-link__header'
+					},
+					children: [
+						information.title
+					]
 				}, {
 					tag: 'div',
 					attributes: {
-						class: 'ck-link__container'
+						class: 'ck-link__url',
+					}
+				}, {
+					tag: 'p',
+					attributes: {
+						class: 'ck-link__description'
 					},
-					children: [ {
-						tag: 'p',
-						attributes: {
-							class: 'ck-link__header'
-						},
-						children: [
-							information.title
-						]
-					}, {
-						tag: 'div',
-						attributes: {
-							class: 'ck-link__url',
-						},
-						children: [ {
-							tag: 'a',
-							attributes: {
-								class: 'ck-link__url-link',
-								target: '_blank',
-								href: this.url
-								// routerLink: this.url
-							},
-							children: [ this.url ]
-						} ]
-					}, {
-						tag: 'p',
-						attributes: {
-							class: 'ck-link__description'
-						},
-						children: [
-							information.description
-						]
-					} ]
-				},
-			]
+					children: [
+						information.description
+					],
+				}, {
+					tag: 'a',
+					attributes: {
+						class: 'ck-link__url-link',
+						target: '_blank',
+						href: this.url
+					},
+					children: [ getDomain( this.url ) ]
+				} ]
+			}, {
+				tag: 'div',
+				attributes: {
+					class: 'ck-link__thumbnail',
+					style: `background-image: url(${ information.image })`,
+				}
+			} ]
 		} ).render();
 
 		return placeholder.outerHTML;

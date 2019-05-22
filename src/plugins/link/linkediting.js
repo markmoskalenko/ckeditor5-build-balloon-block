@@ -60,7 +60,7 @@ export default class LinkEditing extends Plugin {
 		editor.conversion.for( 'editingDowncast' ).add(
 			modelToViewUrlAttributeConverter( registry, {
 				renderForEditingView: true
-			} ) );
+			}, editor.config.get( 'link.api' ) ) );
 
 		editor.conversion.for( 'upcast' )
 			.elementToAttribute( {
@@ -80,9 +80,11 @@ export default class LinkEditing extends Plugin {
 				model: ( viewElement, viewWriter ) => {
 					const url = viewElement.getAttribute( 'href' );
 					const isPreview = viewElement.parent.childCount === 1 &&
-						viewElement._children[ 0 ].data === url;
+						( viewElement._children[ 0 ].data === url ||
+							( viewElement._children[ 0 ].childCount === 1 &&
+								viewElement._children[ 0 ]._children[ 0 ].data === url ) );
 
-					const previewInfo = parseUrl( url );
+					const previewInfo = parseUrl( editor.config.get( 'link.api' ), url );
 
 					if ( registry.hasLinkInfo( url ) && isPreview && previewInfo.title ) {
 						return viewWriter.createElement( 'preview', { url, info: previewInfo } );
