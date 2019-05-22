@@ -30,14 +30,16 @@
 <script>
 	BalloonEditor.create( document.querySelector( '#editor' ), {
 		placeholder: 'test',
-		link: { host: 'app.mybase.pro' },
+		link: { api: 'https://dev.api.mybase.pro/' },
 		fileUploadOptions: {
 			urlUpload: 'https://dev.api.mybase.pro/files/upload-redactor-image?accessToken=N1SooFlzcTUw_HgadlmfcJOSwOgjCJQy&companyId=5cc9b7f6760a117a7a1817e2'
 		}
 	} )
 		.then( editor => {
 			window.editor = editor;
-			editor.setData( `<h2>Sample</h2><p>This is an instance of the <a href="https://ckeditor.com/docs/ckeditor5/latest/builds/guides/overview.html#balloon-editor"><mark class="pen-gray">balloon block editor build</mark></a><mark class="pen-gray">.</mark></p><section class="ck-delimiter ck-widget" contenteditable="false"></section><figure class="image ck-widget" contenteditable="false"><img src="../tests/manual/sample.jpg" alt="Autumn fields"><figcaption class="ck-placeholder ck-editor__editable ck-editor__nested-editable ck-hidden" data-placeholder="Подпись к изображению" contenteditable="true"><br data-cke-filler="true"></figcaption></figure><p>You can use this sample to validate whether your <a href="https://ckeditor.com/docs/ckeditor5/latest/builds/guides/development/custom-builds.html">custom build</a> works fine.</p>` );
+			const content = `<p>Почитать о блокчейне:</p><p class="ck-link"><a href="https://medium.com/@jimmysong/why-blockchain-is-hard-60416ea4c5c"><span>https://medium.com/@jimmysong/why-blockchain-is-hard-60416ea4c5c</span></a></p>`;
+
+				editor.setData( content );
 
 			const model = editor.model;
 			const doc = editor.model.document;
