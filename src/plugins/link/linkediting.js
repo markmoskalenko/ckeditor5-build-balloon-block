@@ -3,94 +3,23 @@ import LinkCommand from '@ckeditor/ckeditor5-link/src/linkcommand';
 import UnlinkCommand from '@ckeditor/ckeditor5-link/src/unlinkcommand';
 import bindTwoStepCaretToAttribute from '@ckeditor/ckeditor5-engine/src/utils/bindtwostepcarettoattribute';
 import findLinkRange from '@ckeditor/ckeditor5-link/src/findlinkrange';
-import LinkRegistry from './linkregistry';
-import { createLinkPreviewElement } from './utils';
-import { toWidget } from '@ckeditor/ckeditor5-widget/src/utils';
 import { ensureSafeUrl, createLinkElement } from '@ckeditor/ckeditor5-link/src/utils';
 import './theme.css';
-import { modelToViewUrlAttributeConverter } from './converters';
-import { parseUrl } from './parser';
+import { parseUrl, getDomain } from './parser';
+import { toWidget, toWidgetEditable, viewToModelPositionOutsideModelElement } from '@ckeditor/ckeditor5-widget/src/utils';
 
 const HIGHLIGHT_CLASS = 'ck-link_selected';
 
 export default class LinkEditing extends Plugin {
 	init() {
 		const editor = this.editor;
-		const model = editor.model;
-		const schema = model.schema;
 
-		const registry = new LinkRegistry( editor.locale, editor.config.get( 'link' ), editor );
+		this._defineSchema();
+		this._defineConversions();
 
-		// Allow link attribute on all inline nodes.
-		schema.extend( '$text', { allowAttributes: 'linkHref' } );
-		schema.register( 'preview', {
-			isObject: true,
-			isBlock: true,
-			allowWhere: '$block',
-			allowAttributes: [ 'url', 'routerLink', 'linkHref', 'info', 'href' ]
-		} );
-
-		editor.conversion.for( 'dataDowncast' )
-			.attributeToElement( { model: 'linkHref', view: createLinkElement } )
-			.elementToElement( {
-				model: 'preview',
-				view: ( modelElement, viewWriter ) => {
-					const url = modelElement.getAttribute( 'url' );
-					const previewInfo = modelElement.getAttribute( 'info' );
-					return createLinkPreviewElement( viewWriter, registry, url, previewInfo );
-				}
-			} );
-
-		editor.conversion.for( 'editingDowncast' )
-			.attributeToElement( {
-				model: 'linkHref', view: ( href, viewWriter ) => {
-					return createLinkElement( ensureSafeUrl( href ), viewWriter );
-				}
-			} )
-			.elementToElement( {
-				model: 'preview', view: ( modelElement, viewWriter ) => {
-					const url = modelElement.getAttribute( 'url' );
-					const previewInfo = modelElement.getAttribute( 'info' );
-					const element = createLinkPreviewElement( viewWriter, registry, url, previewInfo );
-
-					return toWidget( element, viewWriter, { label: 'препросмотр ссылки', hasSelectionHandler: true } );
-				}
-			} );
-
-		editor.conversion.for( 'editingDowncast' ).add(
-			modelToViewUrlAttributeConverter( registry, {
-				renderForEditingView: true
-			}, editor.config.get( 'link.api' ) ) );
-
-		editor.conversion.for( 'upcast' )
-			.elementToAttribute( {
-				view: {
-					name: 'a',
-					attributes: {
-						href: true
-					}
-				},
-				model: {
-					key: 'linkHref',
-					value: viewElement => viewElement.getAttribute( 'href' )
-				}
-			} )
-			.elementToElement( {
-				view: { name: 'a', attributes: { href: true } },
-				model: ( viewElement, viewWriter ) => {
-					const url = viewElement.getAttribute( 'href' );
-					const isPreview = viewElement.parent.childCount === 1 &&
-						( viewElement._children[ 0 ].data === url ||
-							( viewElement._children[ 0 ].childCount === 1 &&
-								viewElement._children[ 0 ]._children[ 0 ].data === url ) );
-
-					const previewInfo = parseUrl( editor.config.get( 'link.api' ), url );
-
-					if ( registry.hasLinkInfo( url ) && isPreview && previewInfo.title ) {
-						return viewWriter.createElement( 'preview', { url, info: previewInfo } );
-					}
-				}
-			} );
+		editor.editing.mapper.on(
+			'viewToModelPosition',
+			viewToModelPositionOutsideModelElement( this.editor.model, viewElement => viewElement.hasClass( 'ck-link' ) ) );
 
 		// Create linking commands.
 		editor.commands.add( 'link', new LinkCommand( editor ) );
@@ -143,6 +72,225 @@ export default class LinkEditing extends Plugin {
 					}
 				} );
 			}
+		} );
+	}
+
+	_defineSchema() {
+		const schema = this.editor.model.schema;
+
+		// Allow link attribute on all inline nodes.
+		schema.extend( '$text', { allowAttributes: 'linkHref' } );
+		schema.register( 'preview', {
+			isObject: true,
+			isBlock: true,
+			allowWhere: '$block',
+			allowAttributes: [ 'url', 'routerLink', 'linkHref', 'info', 'href' ]
+		} );
+
+		schema.register( 'previewLinkTitle', {
+			isLimit: true,
+			allowIn: 'preview',
+			allowContentOf: '$block',
+			allowAttributes: [ 'text' ]
+		} );
+
+		schema.register( 'previewLinkDescription', {
+			isLimit: true,
+			allowIn: 'preview',
+			allowContentOf: '$block',
+			allowAttributes: [ 'text' ]
+		} );
+
+		schema.register( 'previewLinkUrl', {
+			isLimit: true,
+			allowIn: 'preview',
+			allowContentOf: '$block',
+			allowAttributes: [ 'url', 'href' ]
+		} );
+
+		schema.register( 'previewLinkImage', {
+			isLimit: true,
+			allowIn: 'preview',
+			allowAttributes: [ 'image' ]
+		} );
+
+		schema.addChildCheck( ( context, childDefinition ) => {
+			if ( context.endsWith( 'previewLinkDescription' ) && childDefinition.name == 'preview' ) {
+				return false;
+			}
+		} );
+	}
+
+	_defineConversions() {
+		const conversion = this.editor.conversion;
+
+		/* Превью и обычные ссылки */
+		conversion.for( 'upcast' )
+			.elementToAttribute( {
+				view: { name: 'a', attributes: { href: true } },
+				model: { key: 'linkHref', value: viewElement => viewElement.getAttribute( 'href' ) }
+			} )
+			.elementToElement( { model: 'preview', view: { name: 'section', classes: 'ck-link' } } )
+
+			/* Из просто ссылки сделать превью блок */
+			.elementToElement( {
+				view: { name: 'a', attributes: { href: true } },
+				model: viewElement => {
+					const url = viewElement.getAttribute( 'href' );
+					const selection = this.editor.model.document.selection.getFirstPosition();
+					const isPreview = selection && selection.parent && selection.parent.childCount === 0;
+
+					const previewInfo = parseUrl( this.editor.config.get( 'link.api' ), url );
+
+					if ( isPreview && previewInfo.title ) {
+						return this._createPreviewBlock( previewInfo, url );
+					}
+				}
+			} );
+
+		conversion.for( 'dataDowncast' )
+			.attributeToElement( { model: 'linkHref', view: createLinkElement } )
+			.elementToElement( { model: 'preview', view: { name: 'section', classes: 'ck-link' } } );
+
+		conversion.for( 'editingDowncast' )
+			.attributeToElement( {
+				model: 'linkHref', view: ( href, viewWriter ) => {
+					return createLinkElement( ensureSafeUrl( href ), viewWriter );
+				}
+			} )
+			.elementToElement( {
+				model: 'preview', view: ( modelElement, viewWriter ) => {
+					const section = viewWriter.createContainerElement( 'section', { class: 'ck-link' } );
+					return toWidget( section, viewWriter, {} );
+				}
+			} );
+
+		/* Preview Title */
+		conversion.for( 'upcast' ).elementToElement( {
+			model: 'previewLinkTitle',
+			view: {
+				name: 'h1',
+				classes: 'ck-link__header'
+			}
+		} );
+		conversion.for( 'dataDowncast' ).elementToElement( {
+			model: 'previewLinkTitle',
+			view: {
+				name: 'h1',
+				classes: 'ck-link__header'
+			}
+		} );
+		conversion.for( 'editingDowncast' ).elementToElement( {
+			model: 'previewLinkTitle',
+			view: ( modelElement, viewWriter ) => {
+				const title = viewWriter.createEditableElement( 'h1', { class: 'ck-link__header' } );
+				return toWidgetEditable( title, viewWriter );
+			}
+		} );
+
+		/* Preview Description */
+		conversion.for( 'upcast' ).elementToElement( {
+			model: 'previewLinkDescription',
+			view: {
+				name: 'p',
+				classes: 'ck-link__description'
+			}
+		} );
+		conversion.for( 'dataDowncast' ).elementToElement( {
+			model: 'previewLinkDescription',
+			view: {
+				name: 'p',
+				classes: 'ck-link__description'
+			}
+		} );
+		conversion.for( 'editingDowncast' ).elementToElement( {
+			model: 'previewLinkDescription',
+			view: ( modelElement, viewWriter ) => {
+				const paragraph = viewWriter.createEditableElement( 'p', { class: 'ck-link__description' } );
+				return toWidgetEditable( paragraph, viewWriter );
+			}
+		} );
+
+		/* Preview URL */
+		conversion.for( 'upcast' ).elementToElement( {
+			model: 'previewLinkUrl',
+			view: {
+				name: 'a',
+				classes: 'ck-link__url'
+			}
+		} );
+		conversion.for( 'dataDowncast' ).elementToElement( {
+			model: 'previewLinkUrl',
+			view: {
+				name: 'a',
+				classes: 'ck-link__url'
+			}
+		} );
+		conversion.for( 'editingDowncast' ).elementToElement( {
+			model: 'previewLinkUrl',
+			view: ( modelElement, viewWriter ) => {
+				const paragraph = viewWriter.createEditableElement( 'a', {
+					class: 'ck-link__url',
+					href: modelElement.getAttribute( 'url' )
+				} );
+
+				return toWidgetEditable( paragraph, viewWriter );
+			}
+
+		} );
+
+		/* Preview Image */
+		conversion.for( 'upcast' ).elementToElement( {
+			model: 'previewLinkImage',
+			view: {
+				name: 'div',
+				classes: 'ck-link__image'
+			}
+		} );
+		conversion.for( 'dataDowncast' ).elementToElement( {
+			model: 'previewLinkImage',
+			view: {
+				name: 'div',
+				classes: 'ck-link__image'
+			}
+		} );
+		conversion.for( 'editingDowncast' ).elementToElement( {
+			model: 'previewLinkImage',
+			view: ( modelElement, viewWriter ) => {
+				const image = modelElement.getAttribute( 'image' );
+
+				const figure = viewWriter.createContainerElement( 'div', {
+					class: 'ck-link__image'
+				} );
+				const imageElement = viewWriter.createEmptyElement( 'img', {
+					src: image
+				} );
+
+				viewWriter.insert( viewWriter.createPositionAt( figure, 0 ), imageElement );
+				return figure;
+			}
+
+		} );
+	}
+
+	_createPreviewBlock( previewInfo, url ) {
+		return this.editor.model.change( writer => {
+			const preview = writer.createElement( 'preview', { url, info: previewInfo } );
+
+			const previewTitle = writer.createElement( 'previewLinkTitle' );
+			const previewDescription = writer.createElement( 'previewLinkDescription' );
+			const previewUrl = writer.createElement( 'previewLinkUrl', { url } );
+			const previewImage = writer.createElement( 'previewLinkImage', { image: previewInfo.image } );
+			writer.appendText( previewInfo.title, {}, previewTitle );
+			writer.appendText( previewInfo.description, {}, previewDescription );
+			writer.appendText( getDomain( url ), { 'linkHref': url }, previewUrl );
+
+			writer.append( previewTitle, preview );
+			writer.append( previewDescription, preview );
+			writer.append( previewUrl, preview );
+			writer.append( previewImage, preview );
+
+			return preview;
 		} );
 	}
 }
