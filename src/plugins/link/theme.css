@@ -2,11 +2,6 @@
 	--ck-link-preview-padding: 24px;
 }
 
-section.ck-link > * {
-	margin-left: var(--ck-link-preview-padding);
-	margin-right: var(--ck-link-preview-padding);
-}
-
 section.ck-link .ck.ck-widget__selection-handler,
 section.ck-link .ck.ck-widget__selection-handler:hover,
 section.ck-link.ck-widget_with-selection-handler.ck-widget_selected .ck-icon__selected-indicator,
@@ -20,20 +15,16 @@ section.ck-link.ck-widget_selected,
 section.ck-link.ck-widget_selected:hover {
 	outline: none !important;
 	transition: none !important;
-	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .09);
-	align-items: center;
 }
 
 .ck-link.ck-widget.ck-widget_selected {
 	box-shadow: inset 0 0 0 1px rgba(59, 199, 171, 1);
 }
 
-
 section.ck-link .ck-link__image {
 	display: table-cell;
 	vertical-align: middle;
 	width: 160px;
-	height: 160px;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
@@ -44,7 +35,9 @@ section.ck-link .ck-link__image img {
 
 section.ck-link {
 	padding: var(--ck-link-preview-padding);
-	display: table-row;
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .09);
+	display: flex;
+	align-items: center;
 }
 
 section.ck-link .ck-link__header {
@@ -54,10 +47,12 @@ section.ck-link .ck-link__header {
 	font-size: 18px;
 	line-height: 1.3;
 	color: #333333;
+	margin: 0;
 	margin-bottom: 8px;
 }
 
-section.ck-link .ck-link__url {
+section.ck-link .ck-link__url,
+section.ck-link .ck-link__url a {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	font-size: 12px;

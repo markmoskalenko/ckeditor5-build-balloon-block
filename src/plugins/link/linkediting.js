@@ -19,7 +19,8 @@ export default class LinkEditing extends Plugin {
 
 		editor.editing.mapper.on(
 			'viewToModelPosition',
-			viewToModelPositionOutsideModelElement( this.editor.model, viewElement => viewElement.hasClass( 'ck-link' ) ) );
+			viewToModelPositionOutsideModelElement( this.editor.model, viewElement => viewElement.hasClass( 'ck-link' ) )
+		);
 
 		// Create linking commands.
 		editor.commands.add( 'link', new LinkCommand( editor ) );
@@ -89,21 +90,21 @@ export default class LinkEditing extends Plugin {
 
 		schema.register( 'previewLinkTitle', {
 			isLimit: true,
-			allowIn: 'preview',
+			allowIn: 'previewLinkContainer',
 			allowContentOf: '$block',
 			allowAttributes: [ 'text' ]
 		} );
 
 		schema.register( 'previewLinkDescription', {
 			isLimit: true,
-			allowIn: 'preview',
+			allowIn: 'previewLinkContainer',
 			allowContentOf: '$block',
 			allowAttributes: [ 'text' ]
 		} );
 
 		schema.register( 'previewLinkUrl', {
 			isLimit: true,
-			allowIn: 'preview',
+			allowIn: 'previewLinkContainer',
 			allowContentOf: '$block',
 			allowAttributes: [ 'url', 'href' ]
 		} );
@@ -111,13 +112,13 @@ export default class LinkEditing extends Plugin {
 		schema.register( 'previewLinkImage', {
 			isLimit: true,
 			allowIn: 'preview',
-			allowAttributes: [ 'image' ]
+			allowAttributes: [ 'image', 'src' ]
 		} );
 
-		schema.addChildCheck( ( context, childDefinition ) => {
-			if ( context.endsWith( 'previewLinkDescription' ) && childDefinition.name == 'preview' ) {
-				return false;
-			}
+		schema.register( 'previewLinkContainer', {
+			isLimit: true,
+			allowIn: 'preview',
+			allowAttributes: []
 		} );
 	}
 
@@ -140,7 +141,7 @@ export default class LinkEditing extends Plugin {
 					const selection = this.editor.model.document.selection.getFirstPosition();
 					const isPreview = selection && selection.parent && selection.parent.childCount === 0;
 
-					const previewInfo = parseUrl( this.editor.config.get( 'link.api' ), url );
+					const previewInfo = this._getPreviewInfo( url );
 
 					if ( isPreview && previewInfo.title ) {
 						return this._createPreviewBlock( previewInfo, url );
@@ -243,15 +244,16 @@ export default class LinkEditing extends Plugin {
 		conversion.for( 'upcast' ).elementToElement( {
 			model: 'previewLinkImage',
 			view: {
-				name: 'div',
+				name: 'img',
 				classes: 'ck-link__image'
 			}
 		} );
 		conversion.for( 'dataDowncast' ).elementToElement( {
 			model: 'previewLinkImage',
-			view: {
-				name: 'div',
-				classes: 'ck-link__image'
+			view: ( view, writer ) => {
+				const src = view.getAttribute( 'image' );
+				const image = writer.createEmptyElement( 'img', { src, class: 'ck-link__image' } );
+				return image;
 			}
 		} );
 		conversion.for( 'editingDowncast' ).elementToElement( {
@@ -259,38 +261,69 @@ export default class LinkEditing extends Plugin {
 			view: ( modelElement, viewWriter ) => {
 				const image = modelElement.getAttribute( 'image' );
 
-				const figure = viewWriter.createContainerElement( 'div', {
-					class: 'ck-link__image'
-				} );
-				const imageElement = viewWriter.createEmptyElement( 'img', {
+				const figure = viewWriter.createEmptyElement( 'img', {
+					class: 'ck-link__image',
 					src: image
 				} );
 
-				viewWriter.insert( viewWriter.createPositionAt( figure, 0 ), imageElement );
 				return figure;
 			}
 
+		} );
+
+		/* Preview Container */
+		conversion.for( 'upcast' ).elementToElement( {
+			model: 'previewLinkContainer',
+			view: {
+				name: 'div',
+				classes: 'ck-link__container'
+			}
+		} );
+		conversion.for( 'dataDowncast' ).elementToElement( {
+			model: 'previewLinkContainer',
+			view: {
+				name: 'div',
+				classes: 'ck-link__container'
+			}
+		} );
+		conversion.for( 'editingDowncast' ).elementToElement( {
+			model: 'previewLinkContainer',
+			view: ( modelElement, viewWriter ) => {
+				const div = viewWriter.createContainerElement( 'div', {
+					class: 'ck-link__container',
+				} );
+
+				return div;
+			}
 		} );
 	}
 
 	_createPreviewBlock( previewInfo, url ) {
 		return this.editor.model.change( writer => {
 			const preview = writer.createElement( 'preview', { url, info: previewInfo } );
+			const container = writer.createElement( 'previewLinkContainer' );
 
 			const previewTitle = writer.createElement( 'previewLinkTitle' );
 			const previewDescription = writer.createElement( 'previewLinkDescription' );
 			const previewUrl = writer.createElement( 'previewLinkUrl', { url } );
 			const previewImage = writer.createElement( 'previewLinkImage', { image: previewInfo.image } );
+
 			writer.appendText( previewInfo.title, {}, previewTitle );
 			writer.appendText( previewInfo.description, {}, previewDescription );
 			writer.appendText( getDomain( url ), { 'linkHref': url }, previewUrl );
 
-			writer.append( previewTitle, preview );
-			writer.append( previewDescription, preview );
-			writer.append( previewUrl, preview );
+			writer.append( previewTitle, container );
+			writer.append( previewDescription, container );
+			writer.append( previewUrl, container );
+
+			writer.append( container, preview );
 			writer.append( previewImage, preview );
 
 			return preview;
 		} );
+	}
+
+	_getPreviewInfo( url ) {
+		return parseUrl( this.editor.config.get( 'link.api' ), url );
 	}
 }
