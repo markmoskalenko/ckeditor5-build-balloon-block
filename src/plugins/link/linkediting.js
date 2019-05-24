@@ -144,10 +144,12 @@ export default class LinkEditing extends Plugin {
 						viewElement.parent && viewElement.parent.childCount === 1 &&
 						viewElement.childCount === 1 && viewElement._children[ 0 ]._textData === url;
 
-					const previewInfo = this._getPreviewInfo( url );
+					if ( isPreview ) {
+						const previewInfo = this._getPreviewInfo( url );
 
-					if ( isPreview && previewInfo.title ) {
-						return this._createPreviewBlock( previewInfo, url );
+						if ( previewInfo.title ) {
+							return this._createPreviewBlock( previewInfo, url );
+						}
 					}
 				}
 			} );
