@@ -1,5 +1,6 @@
 :root {
 	--ck-link-preview-padding: 24px;
+	--ck-link-preview-image-width: 160px;
 }
 
 section.ck-link .ck.ck-widget__selection-handler,
@@ -24,7 +25,8 @@ section.ck-link.ck-widget_selected:hover {
 section.ck-link .ck-link__image {
 	display: table-cell;
 	vertical-align: middle;
-	width: 160px;
+	width: var(--ck-link-preview-image-width);
+	margin-right: 2px;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
@@ -41,6 +43,8 @@ section.ck-link {
 
 section.ck-link .ck-link__container {
 	padding: var(--ck-link-preview-padding);
+	max-width: calc(100% - var(--ck-link-preview-image-width) - 2 * var(--ck-link-preview-padding) - 2px);
+
 }
 
 section.ck-link .ck-link__header {
@@ -68,9 +72,6 @@ section.ck-link .ck-link__description {
 	font-style: normal;
 	color: #556066;
 	margin-bottom: 10px;
-	max-height: 120px;
-	overflow: hidden;
 	line-height: 1em;
-	text-overflow: ellipsis;
 	white-space: normal !important;
 }
