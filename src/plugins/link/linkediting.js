@@ -138,10 +138,11 @@ export default class LinkEditing extends Plugin {
 				view: { name: 'a', attributes: { href: true } },
 				model: viewElement => {
 					const url = viewElement.getAttribute( 'href' );
+
 					const selection = this.editor.model.document.selection.getFirstPosition();
 					const isPreview = selection && selection.parent && selection.parent.childCount === 0 &&
 						viewElement.parent && viewElement.parent.childCount === 1 &&
-						viewElement.childCount === 1 && viewElement._children._textData === url;
+						viewElement.childCount === 1 && viewElement._children[ 0 ]._textData === url;
 
 					const previewInfo = this._getPreviewInfo( url );
 
@@ -241,7 +242,15 @@ export default class LinkEditing extends Plugin {
 
 		conversion.for( 'dataDowncast' ).elementToElement( {
 			model: 'previewLinkUrl',
-			view: ( modelElement, writer ) => createLinkElement( modelElement.getAttribute( 'href' ), writer )
+			view: ( modelElement, viewWriter ) => {
+				const href = modelElement.getAttribute( 'href' );
+				const paragraph = viewWriter.createEditableElement( 'a', {
+					class: 'ck-link__url',
+					href,
+				} );
+
+				return toWidgetEditable( paragraph, viewWriter );
+			}
 		} );
 
 		conversion.for( 'editingDowncast' ).elementToElement( {
@@ -252,8 +261,6 @@ export default class LinkEditing extends Plugin {
 					class: 'ck-link__url',
 					href,
 				} );
-
-				// viewWriter.setCustomProperty( 'linkHref', href, paragraph );
 
 				return toWidgetEditable( paragraph, viewWriter );
 			}
