@@ -240,31 +240,51 @@ export default class LinkEditing extends Plugin {
 				}
 			} );
 
-		conversion.for( 'dataDowncast' ).elementToElement( {
-			model: 'previewLinkUrl',
-			view: ( modelElement, viewWriter ) => {
-				const href = modelElement.getAttribute( 'href' );
-				const paragraph = viewWriter.createEditableElement( 'a', {
-					class: 'ck-link__url',
-					href,
-				} );
+		conversion.for( 'dataDowncast' )
+			.attributeToAttribute( {
+				view: { name: 'a', key: 'href' },
+				model: {
+					key: 'href',
+					value: viewLink => {
+						const href = viewLink.getAttribute( 'href' );
+						return {
+							linkHref: href,
+							href
+						};
+					}
+				}
+			} )
+			.elementToElement( {
+				model: 'previewLinkUrl',
+				view: {
+					name: 'a',
+					classes: 'ck-link__url',
+				}
+			} );
 
-				return toWidgetEditable( paragraph, viewWriter );
-			}
-		} );
+		conversion.for( 'editingDowncast' )
+			.attributeToAttribute( {
+				view: { name: 'a', key: 'href' },
+				model: {
+					key: 'href',
+					value: viewLink => {
+						const href = viewLink.getAttribute( 'href' );
+						return { linkHref: href };
+					}
+				}
+			} )
+			.elementToElement( {
+				model: 'previewLinkUrl',
+				view: ( modelElement, viewWriter ) => {
+					const href = modelElement.getAttribute( 'href' );
+					const paragraph = viewWriter.createEditableElement( 'a', {
+						class: 'ck-link__url',
+						href
+					} );
 
-		conversion.for( 'editingDowncast' ).elementToElement( {
-			model: 'previewLinkUrl',
-			view: ( modelElement, viewWriter ) => {
-				const href = modelElement.getAttribute( 'href' );
-				const paragraph = viewWriter.createEditableElement( 'a', {
-					class: 'ck-link__url',
-					href,
-				} );
-
-				return toWidgetEditable( paragraph, viewWriter );
-			}
-		} );
+					return toWidgetEditable( paragraph, viewWriter );
+				}
+			} );
 
 		/* Preview Image */
 		conversion.for( 'upcast' )
