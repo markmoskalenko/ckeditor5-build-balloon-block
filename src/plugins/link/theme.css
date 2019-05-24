@@ -43,7 +43,7 @@ section.ck-link {
 
 section.ck-link .ck-link__container {
 	padding: var(--ck-link-preview-padding);
-	max-width: calc(100% - var(--ck-link-preview-image-width) - 2 * var(--ck-link-preview-padding) - 2px);
+	width: calc(100% - var(--ck-link-preview-image-width) - 2 * var(--ck-link-preview-padding) - 2px);
 
 }
 
