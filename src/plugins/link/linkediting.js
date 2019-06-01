@@ -137,14 +137,10 @@ export default class LinkEditing extends Plugin {
 			.elementToElement( {
 				view: { name: 'a', attributes: { href: true } },
 				model: viewElement => {
-					const url = viewElement.getAttribute( 'href' );
+					const shouldNotParse = viewElement.getAttribute( 'donotparse' );
 
-					const selection = this.editor.model.document.selection.getFirstPosition();
-					const isPreview = selection && selection.parent && selection.parent.childCount === 0 &&
-						viewElement.parent && viewElement.parent.childCount === 1 &&
-						viewElement.childCount === 1 && viewElement._children[ 0 ]._textData === url;
-
-					if ( isPreview ) {
+					if ( this._isPreview( viewElement ) && !shouldNotParse ) {
+						const url = viewElement.getAttribute( 'href' );
 						const previewInfo = this._getPreviewInfo( url );
 
 						if ( previewInfo.title ) {
@@ -155,13 +151,21 @@ export default class LinkEditing extends Plugin {
 			} );
 
 		conversion.for( 'dataDowncast' )
-			.attributeToElement( { model: 'linkHref', view: createLinkElement } )
+			.attributeToElement( {
+				model: 'linkHref', view: ( href, viewWriter ) => {
+					const link = createLinkElement( href, viewWriter );
+					viewWriter.setAttribute( 'donotparse', true, link );
+					return link;
+				}
+			} )
 			.elementToElement( { model: 'preview', view: { name: 'section', classes: 'ck-link' } } );
 
 		conversion.for( 'editingDowncast' )
 			.attributeToElement( {
 				model: 'linkHref', view: ( href, viewWriter ) => {
-					return createLinkElement( ensureSafeUrl( href ), viewWriter );
+					const link = createLinkElement( ensureSafeUrl( href ), viewWriter );
+					viewWriter.setAttribute( 'donotparse', true, link );
+					return link;
 				}
 			} )
 			.elementToElement( {
@@ -375,5 +379,16 @@ export default class LinkEditing extends Plugin {
 
 	_getPreviewInfo( url ) {
 		return parseUrl( this.editor.config.get( 'link.api' ), url );
+	}
+
+	_isPreview( viewElement ) {
+		const url = viewElement.getAttribute( 'href' );
+
+		const selection = this.editor.model.document.selection.getFirstPosition();
+		const isPreview = selection && selection.parent && selection.parent.childCount === 0 &&
+			viewElement.parent && viewElement.parent.childCount === 1 &&
+			viewElement.childCount === 1 && viewElement._children[ 0 ]._textData === url;
+
+		return isPreview;
 	}
 }
