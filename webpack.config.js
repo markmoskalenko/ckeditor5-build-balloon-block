@@ -24,7 +24,7 @@ const icons = [
 	new webpack.NormalModuleReplacementPlugin( /bulletedlist\.svg/, __dirname + '/src/assets/icons/bulletedlist.svg' ),
 	new webpack.NormalModuleReplacementPlugin( /link\.svg/, __dirname + '/src/assets/icons/link.svg' ),
 	new webpack.NormalModuleReplacementPlugin( /linkui\.js/, __dirname + '/src/plugins/link/linkui.js' ),
-	new webpack.NormalModuleReplacementPlugin( /linkediting\.js/, __dirname + '/src/plugins/link/linkediting.js' ),
+	// new webpack.NormalModuleReplacementPlugin( /linkediting\.js/, __dirname + '/src/plugins/link/linkediting.js' ),
 	new webpack.NormalModuleReplacementPlugin( /headingui\.js/, __dirname + '/src/plugins/heading/headingui.js' ),
 	// new webpack.NormalModuleReplacementPlugin( /table-merge-cell\.svg/, __dirname + '/src/assets/icons/link.svg' ),
 	new webpack.NormalModuleReplacementPlugin( /blocktoolbar\.js/, __dirname + '/src/plugins/blocktoolbar/blocktoolbar.js' ),
