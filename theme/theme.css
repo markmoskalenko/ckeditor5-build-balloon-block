@@ -554,3 +554,16 @@
 	box-shadow: none !important;
 	background-color: transparent !important;
 }
+
+/* BLOCK QUOTE */
+.ck-content {
+	padding-left: 25px !important;
+	padding-right: 25px !important;
+}
+
+.ck-content blockquote {
+	border-left: 3px solid rgba(51, 51, 51, 0.84);
+	padding-left: 20px;
+	margin-left: -23px;
+	padding-bottom: 2px;
+}
