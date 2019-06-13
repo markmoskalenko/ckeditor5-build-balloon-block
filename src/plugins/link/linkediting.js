@@ -131,24 +131,24 @@ export default class LinkEditing extends Plugin {
 				view: { name: 'a', attributes: { href: true } },
 				model: { key: 'linkHref', value: viewElement => viewElement.getAttribute( 'href' ) }
 			} )
-			.elementToElement( { model: 'preview', view: { name: 'section', classes: 'ck-link' } } )
+			.elementToElement( { model: 'preview', view: { name: 'section', classes: 'ck-link' } } );
 
-			/* Из просто ссылки сделать превью блок */
-			.elementToElement( {
-				view: { name: 'a', attributes: { href: true } },
-				model: viewElement => {
-					const shouldNotParse = viewElement.getAttribute( 'donotparse' );
-
-					if ( this._isPreview( viewElement ) && !shouldNotParse ) {
-						const url = viewElement.getAttribute( 'href' );
-						const previewInfo = this._getPreviewInfo( url );
-
-						if ( previewInfo.title ) {
-							return this._createPreviewBlock( previewInfo, url );
-						}
-					}
-				}
-			} );
+		/* Из просто ссылки сделать превью блок */
+		// .elementToElement( {
+		// 	view: { name: 'a', attributes: { href: true } },
+		// 	model: viewElement => {
+		// 		const shouldNotParse = viewElement.getAttribute( 'donotparse' );
+		//
+		// 		if ( this._isPreview( viewElement ) && !shouldNotParse ) {
+		// 			const url = viewElement.getAttribute( 'href' );
+		// 			const previewInfo = this._getPreviewInfo( url );
+		//
+		// 			if ( previewInfo.title ) {
+		// 				return this._createPreviewBlock( previewInfo, url );
+		// 			}
+		// 		}
+		// 	}
+		// } );
 
 		conversion.for( 'dataDowncast' )
 			.attributeToElement( {
