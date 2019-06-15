@@ -352,6 +352,120 @@
 	height: 22px !important;
 }
 
+/* HIGHLIGHT */
+:root {
+	--ck-custom-highlight-marker-yellow: #fdf5dd;
+	--ck-custom-highlight-marker-green: #e3f7f3;
+	--ck-custom-highlight-marker-orange: #fbe8df;
+	--ck-custom-highlight-marker-blue: #ddf5fb;
+	--ck-custom-highlight-marker-gray: #f0f2f3;
+	--ck-custom-highlight-pen-red: #f35e5e;
+	--ck-custom-highlight-pen-green: #3bc7ab;
+	--ck-custom-highlight-pen-blue: #1f8ceb;
+	--ck-custom-highlight-pen-light-blue: #1ebfe9;
+	--ck-custom-highlight-pen-yellow: #f4c221;
+	--ck-custom-highlight-pen-orange: #e86d31;
+	--ck-custom-highlight-pen-black: #333333;
+	--ck-custom-highlight-pen-gray: #c4c7cc;
+	--ck-custom-highlight-pen-light-gray: #e4e5e9;
+	--ck-custom-highlight-pen-medium-gray: #9aa5ab;
+	--ck-custom-highlight-pen-dark-gray: #556066;
+}
+
+/*@define-mixin custom-highlight-marker-color $color {*/
+	/*.marker-$color {*/
+		/*background-color: var(--ck-custom-highlight-marker-$color) !important;*/
+	/*}*/
+/*}*/
+
+/*@define-mixin custom-highlight-pen-color $color {*/
+	/*.pen-$color {*/
+		/*color: var(--ck-custom-highlight-pen-$color) !important;*/
+
+		/*!* Override default yellow background of `<mark>` from user agent stylesheet *!*/
+		/*background-color: transparent !important;*/
+	/*}*/
+/*}*/
+
+/*@mixin custom-highlight-marker-color yellow;*/
+/*@mixin custom-highlight-marker-color green;*/
+/*@mixin custom-highlight-marker-color orange;*/
+/*@mixin custom-highlight-marker-color blue;*/
+/*@mixin custom-highlight-marker-color gray;*/
+/*@mixin custom-highlight-pen-color red;*/
+/*@mixin custom-highlight-pen-color green;*/
+/*@mixin custom-highlight-pen-color blue;*/
+/*@mixin custom-highlight-pen-color light-blue;*/
+/*@mixin custom-highlight-pen-color black;*/
+/*@mixin custom-highlight-pen-color yellow;*/
+/*@mixin custom-highlight-pen-color orange;*/
+/*@mixin custom-highlight-pen-color gray;*/
+/*@mixin custom-highlight-pen-color dark-gray;*/
+/*@mixin custom-highlight-pen-color medium-gray;*/
+/*@mixin custom-highlight-pen-color light-gray;*/
+
+
+.marker-yellow {
+	background-color: #fdf5dd;
+}
+.marker-green {
+	background-color: #e3f7f3;
+}
+.marker-orange {
+	background-color: #fbe8df;
+}
+.marker-blue {
+	background-color: #ddf5fb;
+}
+.marker-gray {
+	background-color: #f0f2f3;
+}
+.pen-red {
+	color: #f35e5e;
+	background-color: transparent !important;
+}
+
+.pen-green {
+	color: #3bc7ab;
+	background-color: transparent !important;
+}
+.pen-blue {
+	color: #1f8ceb;
+	background-color: transparent !important;
+}
+.pen-light-blue {
+	color: #1ebfe9;
+	background-color: transparent !important;
+}
+.pen-yellow {
+	color: #f4c221;
+	background-color: transparent !important;
+}
+.pen-orange {
+	color: #e86d31;
+	background-color: transparent !important;
+}
+.pen-black {
+	color: #333333;
+	background-color: transparent !important;
+}
+.pen-gray {
+	color: #c4c7cc;
+	background-color: transparent !important;
+}
+.pen-light-gray {
+	color: #e4e5e9;
+	background-color: transparent !important;
+}
+.pen-medium-gray {
+	color: #9aa5ab;
+	background-color: transparent !important;
+}
+.pen-dark-gray {
+	color: #556066;
+	background-color: transparent !important;
+}
+
 @define-mixin button-custom-highlight-color $color {
 	.ck.ck-button.marker-$color, .ck.ck-button.marker-$color:hover {
 		background-color: var(--ck-custom-highlight-marker-$color) !important;
