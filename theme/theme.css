@@ -301,59 +301,6 @@
 	color: #1f8ceb !important;
 }
 
-/* HIGHLIGHT */
-
-:root {
-	--ck-custom-highlight-marker-yellow: #fdf5dd;
-	--ck-custom-highlight-marker-green: #e3f7f3;
-	--ck-custom-highlight-marker-orange: #fbe8df;
-	--ck-custom-highlight-marker-blue: #ddf5fb;
-	--ck-custom-highlight-marker-gray: #f0f2f3;
-	--ck-custom-highlight-pen-red: #f35e5e;
-	--ck-custom-highlight-pen-green: #3bc7ab;
-	--ck-custom-highlight-pen-blue: #1f8ceb;
-	--ck-custom-highlight-pen-light-blue: #1ebfe9;
-	--ck-custom-highlight-pen-yellow: #f4c221;
-	--ck-custom-highlight-pen-orange: #e86d31;
-	--ck-custom-highlight-pen-black: #333333;
-	--ck-custom-highlight-pen-gray: #c4c7cc;
-	--ck-custom-highlight-pen-light-gray: #e4e5e9;
-	--ck-custom-highlight-pen-medium-gray: #9aa5ab;
-	--ck-custom-highlight-pen-dark-gray: #556066;
-}
-
-@define-mixin custom-highlight-marker-color $color {
-	.marker-$color {
-		background-color: var(--ck-custom-highlight-marker-$color) !important;
-	}
-}
-
-@define-mixin custom-highlight-pen-color $color {
-	.pen-$color {
-		color: var(--ck-custom-highlight-pen-$color) !important;
-
-		/* Override default yellow background of `<mark>` from user agent stylesheet */
-		background-color: transparent !important;
-	}
-}
-
-@mixin custom-highlight-marker-color yellow;
-@mixin custom-highlight-marker-color green;
-@mixin custom-highlight-marker-color orange;
-@mixin custom-highlight-marker-color blue;
-@mixin custom-highlight-marker-color gray;
-@mixin custom-highlight-pen-color red;
-@mixin custom-highlight-pen-color green;
-@mixin custom-highlight-pen-color blue;
-@mixin custom-highlight-pen-color light-blue;
-@mixin custom-highlight-pen-color black;
-@mixin custom-highlight-pen-color yellow;
-@mixin custom-highlight-pen-color orange;
-@mixin custom-highlight-pen-color gray;
-@mixin custom-highlight-pen-color dark-gray;
-@mixin custom-highlight-pen-color medium-gray;
-@mixin custom-highlight-pen-color light-gray;
-
 .ck-media-embed-dropdown .ck-dropdown__panel,
 .ck-alignment-dropdown .ck-dropdown__panel,
 .ck-custom-table-dropdown .ck-dropdown__panel,
@@ -556,14 +503,8 @@
 }
 
 /* BLOCK QUOTE */
-.ck-content {
-	padding-left: 25px !important;
-	padding-right: 25px !important;
-}
-
 .ck-content blockquote {
-	border-left: 3px solid rgba(51, 51, 51, 0.84);
-	padding-left: 20px;
-	margin-left: -23px;
-	padding-bottom: 2px;
+	border-left: 2px solid #556066;
+	padding-left: 16px;
+	line-height: 1.5;
 }
