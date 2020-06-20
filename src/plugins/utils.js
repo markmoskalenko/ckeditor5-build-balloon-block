@@ -5,8 +5,8 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import ListItemView from '@ckeditor/ckeditor5-ui/src/list/listitemview';
 import ListSeparatorView from '@ckeditor/ckeditor5-ui/src/list/listseparatorview';
 
-export function addToolbarToDropdownContainer( dropdownView, buttons ) {
-	const toolbarView = dropdownView.toolbarView = new ToolbarView();
+export function addToolbarToDropdownContainer( dropdownView, buttons, locale ) {
+	const toolbarView = dropdownView.toolbarView = new ToolbarView( locale );
 
 	buttons.map( view => toolbarView.items.add( view ) );
 	toolbarView.items.delegate( 'execute' ).to( dropdownView );

@@ -27,7 +27,13 @@ export default class LinkEditing extends Plugin {
 		editor.commands.add( 'unlink', new UnlinkCommand( editor ) );
 
 		// Enable two-step caret movement for `linkHref` attribute.
-		bindTwoStepCaretToAttribute( editor.editing.view, editor.model, this, 'linkHref' );
+		bindTwoStepCaretToAttribute( {
+			view: editor.editing.view,
+			model: editor.model,
+			emitter: this,
+			attribute: 'linkHref',
+			locale: editor.locale
+		} );
 
 		// Setup highlight over selected link.
 		this._setupLinkHighlight();
@@ -264,7 +270,7 @@ export default class LinkEditing extends Plugin {
 				model: 'previewLinkUrl',
 				view: {
 					name: 'a',
-					classes: 'ck-link__url',
+					classes: 'ck-link__url'
 				}
 			} );
 
@@ -342,7 +348,7 @@ export default class LinkEditing extends Plugin {
 			model: 'previewLinkContainer',
 			view: ( modelElement, viewWriter ) => {
 				const div = viewWriter.createContainerElement( 'div', {
-					class: 'ck-link__container',
+					class: 'ck-link__container'
 				} );
 
 				return div;

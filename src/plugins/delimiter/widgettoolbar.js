@@ -5,7 +5,7 @@ import CKEditorError from '@ckeditor/ckeditor5-utils/src/ckeditorerror';
 
 const positionEast = ( targetRect, balloonRect ) => ( {
 	top: targetRect.top + ( targetRect.height - balloonRect.height ) + 3,
-	left: targetRect.left + targetRect.width,
+	left: targetRect.left + targetRect.width
 } );
 
 export default class WidgetToolbarPlugin extends Plugin {
@@ -54,10 +54,10 @@ export default class WidgetToolbarPlugin extends Plugin {
 
 	register( toolbarId, { items, getRelatedElement, balloonClassName = 'ck-toolbar-container' } ) {
 		const editor = this.editor;
-		const toolbarView = new ToolbarView();
+		const toolbarView = new ToolbarView( editor.locale );
 
 		toolbarView.set( {
-			isVertical: true,
+			isVertical: true
 		} );
 
 		if ( this._toolbarDefinitions.has( toolbarId ) ) {
@@ -75,7 +75,7 @@ export default class WidgetToolbarPlugin extends Plugin {
 		this._toolbarDefinitions.set( toolbarId, {
 			view: toolbarView,
 			getRelatedElement,
-			balloonClassName,
+			balloonClassName
 		} );
 	}
 
@@ -124,7 +124,7 @@ export default class WidgetToolbarPlugin extends Plugin {
 			this._balloon.add( {
 				view: toolbarDefinition.view,
 				position: getBalloonPositionData( this.editor, relatedElement ),
-				balloonClassName: toolbarDefinition.balloonClassName,
+				balloonClassName: toolbarDefinition.balloonClassName
 			} );
 		}
 	}

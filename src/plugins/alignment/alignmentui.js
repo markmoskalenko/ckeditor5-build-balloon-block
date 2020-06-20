@@ -50,7 +50,7 @@ export default class AlignmentUI extends Plugin {
 
 			// Add existing alignment buttons to dropdown's toolbar.
 			const buttons = options.map( option => componentFactory.create( `alignment:${ option }` ) );
-			const container = new ContainerView( 'div', [ addToolbarToDropdownContainer( dropdownView, buttons ) ] );
+			const container = new ContainerView( 'div', [ addToolbarToDropdownContainer( dropdownView, buttons, editor.locale ) ] );
 
 			// Configure dropdown properties an behavior.
 			dropdownView.buttonView.set( {

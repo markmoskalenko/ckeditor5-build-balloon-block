@@ -90,7 +90,7 @@ export default class CustomHighlightUI extends Plugin {
 				tooltip: 'Цвет текста',
 				lastExecuted: startingHighlighter.model,
 				commandValue: startingHighlighter.model,
-				icon: brushIcon,
+				icon: brushIcon
 			} );
 
 			const penButtons = options.pens.map( option => {
@@ -117,9 +117,9 @@ export default class CustomHighlightUI extends Plugin {
 
 			const container = new ContainerView( 'div', [
 				headerPen,
-				addToolbarToDropdownContainer( dropdownView, penButtons ),
+				addToolbarToDropdownContainer( dropdownView, penButtons, editor.locale ),
 				headerHighlight,
-				addToolbarToDropdownContainer( dropdownView, customHighlightButtons )
+				addToolbarToDropdownContainer( dropdownView, customHighlightButtons, editor.locale )
 			] );
 
 			dropdownView.render();
