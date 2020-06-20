@@ -248,6 +248,10 @@
 .ck-link-actions {
 	padding: 4px 12px !important;
 }
+/*
+ * Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
 
 .ck.ck-block-toolbar-button {
 	border-radius: 50% !important;

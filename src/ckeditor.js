@@ -1,6 +1,6 @@
 /**
- * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see LICENSE.md.
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
 // The editor creator to use.
@@ -25,6 +25,7 @@ import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
+import Indent from '@ckeditor/ckeditor5-indent/src/indent';
 import Link from '@ckeditor/ckeditor5-link/src/link';
 import { FileUploadAdapter } from './plugins/file-upload-adapter/file-upload-adapter';
 import List from '@ckeditor/ckeditor5-list/src/list';
@@ -36,6 +37,8 @@ import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import UploadAdapter from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter';
+import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
+
 import '../theme/theme.css';
 import CustomHighlight from './plugins/highlight/highlight';
 import HeadingButtonsUI from '@ckeditor/ckeditor5-heading/src/headingbuttonsui';
@@ -71,20 +74,22 @@ BalloonEditor.builtinPlugins = [
 	ImageStyle,
 	ImageToolbar,
 	ImageUpload,
+	Indent,
 	Link,
 	List,
 	MediaEmbed,
 	Paragraph,
 	PasteFromOffice,
 	Table,
-	TableToolbar
+	TableToolbar,
+	TextTransformation
 ];
 
 // Editor configuration.
 BalloonEditor.defaultConfig = {
 	extraPlugins: [ FileUploadAdapterPlugin ],
 	blockToolbar: [
-		'delimiter', 'bulletedList', 'imageUpload', 'mediaEmbed', 'blockQuote', 'insertTable'
+		'delimiter', 'numberedList', 'bulletedList', 'imageUpload', 'mediaEmbed', 'blockQuote', 'insertTable'
 	],
 	toolbar: {
 		items: [

@@ -64,8 +64,8 @@
 			// editor.model.change(writer => writer.rename(delimiter, 'delimiter'));
 
 		} )
-		.catch( err => {
-			console.error( err.stack );
+		.catch( error => {
+			console.error( 'There was a problem initializing the editor.', error );
 		} );
 </script>
 
