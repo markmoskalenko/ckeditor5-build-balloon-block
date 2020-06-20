@@ -7,7 +7,7 @@ import { isSupported } from '@ckeditor/ckeditor5-alignment/src/utils';
 import alignLeftIcon from '../../assets/icons/align-left.svg';
 import alignRightIcon from '../../assets/icons/align-right.svg';
 import alignCenterIcon from '../../assets/icons/align-center.svg';
-import alignJustifyIcon from '@ckeditor/ckeditor5-alignment/theme/icons/align-justify.svg';
+import alignJustifyIcon from '@ckeditor/ckeditor5-core/theme/icons/align-justify.svg';
 import ContainerView from '../container';
 import { addToolbarToDropdownContainer } from '../utils';
 
